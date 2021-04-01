@@ -1,23 +1,30 @@
 package com.magneto.services;
 
+
 import com.magneto.Entities.Human;
+import com.magneto.repositories.HumanRepository;
 import com.magneto.utils.MatrixUtils;
 import com.magneto.utils.Validations;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.exceptions.HttpStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 
 @Singleton
 public class HumanService {
     private static final Logger log = LoggerFactory.getLogger(HumanService.class);
+
+
+    private String dna = new String();
     @Inject
     private MatrixUtils matrixUtils;
     @Inject
     private Validations validations;
+    @Inject
+    private HumanRepository humanRepository;
 
 
     /**
@@ -85,13 +92,31 @@ public class HumanService {
 
         }
 
+        dna = concatDna(human.getDna());
+
         if(countMutantSequence >= validations.NUMBER_SEQ_TO_BE_MUTANT){
             log.info("DNA is mutant, it has {} Mutant Sequences", countMutantSequence);
+            //add the dna sequence in the DB
+            if(!humanRepository.addDna(dna, true)) {
+                throw new HttpStatusException(HttpStatus.FORBIDDEN, "Failure in add dna process");
+            }
             return true;
         }else{
             log.info("DNA is not mutant, it has {} Mutant Sequences", countMutantSequence);
+            //add the dna sequence in the DB
+            if(!humanRepository.addDna(dna, false)) {
+                throw new HttpStatusException(HttpStatus.FORBIDDEN, "Failure in add dna process");
+            }
             return false;
         }
 
+    }
+
+    public String concatDna(List<String> dnaSequences){
+        StringBuilder dna = new StringBuilder();
+        for (String sequence:dnaSequences) {
+            dna.append(sequence + '|');
+        }
+        return  dna.toString();
     }
 }

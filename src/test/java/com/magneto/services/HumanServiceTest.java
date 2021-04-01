@@ -1,6 +1,7 @@
 package com.magneto.services;
 
 
+import com.amazonaws.services.dynamodbv2.xspec.S;
 import com.magneto.Entities.Human;
 import io.micronaut.http.exceptions.HttpStatusException;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -89,5 +90,19 @@ public class HumanServiceTest {
             }
         }
         Assertions.assertFalse(humanService.isMutant(human));
+    }
+
+    @Test
+    public void concatDnaTest(){
+        String dna = new String();
+        List<String> dnaSequences = new LinkedList<>();
+        dnaSequences.add("AGAGAG");
+        dnaSequences.add("CTCTCT");
+        dnaSequences.add("TTATGT");
+        dnaSequences.add("AGAAGG");
+        dnaSequences.add("CCCCTA");
+        dnaSequences.add("TCACTG");
+        dna = humanService.concatDna(dnaSequences);
+        System.out.println(dna);
     }
 }
