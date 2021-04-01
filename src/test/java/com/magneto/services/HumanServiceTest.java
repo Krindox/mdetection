@@ -3,10 +3,14 @@ package com.magneto.services;
 
 import com.amazonaws.services.dynamodbv2.xspec.S;
 import com.magneto.Entities.Human;
+import com.magneto.repositories.HumanRepository;
 import io.micronaut.http.exceptions.HttpStatusException;
+import io.micronaut.test.annotation.MockBean;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
 import javax.inject.Inject;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,12 +46,6 @@ public class HumanServiceTest {
         listDnaMutant.add("XCCYTA");
         listDnaMutant.add("TCAZTL");
         human.setDna(listDnaMutant);
-        char[][] matrix = new char[listDnaMutant.size()][listDnaMutant.size()];
-        for (int i = 0; i < listDnaMutant.size(); i++) {
-            for (int j = 0; j < listDnaMutant.size(); j++) {
-                matrix[i][j] = listDnaMutant.get(i).charAt(j);
-            }
-        }
         Assertions.assertThrows(HttpStatusException.class, () -> humanService.isMutant(human), "throw expected");
     }
 
@@ -62,12 +60,6 @@ public class HumanServiceTest {
         listDnaMutant.add("CCCCTA");
         listDnaMutant.add("TCACTG");
         human.setDna(listDnaMutant);
-        char[][] matrix = new char[listDnaMutant.size()][listDnaMutant.size()];
-        for (int i = 0; i < listDnaMutant.size(); i++) {
-            for (int j = 0; j < listDnaMutant.size(); j++) {
-                matrix[i][j] = listDnaMutant.get(i).charAt(j);
-            }
-        }
         boolean isMutant = humanService.isMutant(human);
         Assertions.assertEquals(true, isMutant);
     }
@@ -83,18 +75,13 @@ public class HumanServiceTest {
         listDnaMutant.add("CCCCTA");
         listDnaMutant.add("TCACTG");
         human.setDna(listDnaMutant);
-        char[][] matrix = new char[listDnaMutant.size()][listDnaMutant.size()];
-        for (int i = 0; i < listDnaMutant.size(); i++) {
-            for (int j = 0; j < listDnaMutant.size(); j++) {
-                matrix[i][j] = listDnaMutant.get(i).charAt(j);
-            }
-        }
         Assertions.assertFalse(humanService.isMutant(human));
     }
 
     @Test
     public void concatDnaTest(){
-        String dna = new String();
+        String expectedDna = new String();
+        expectedDna = "AGAGAG|CTCTCT|TTATGT|AGAAGG|CCCCTA|TCACTG|";
         List<String> dnaSequences = new LinkedList<>();
         dnaSequences.add("AGAGAG");
         dnaSequences.add("CTCTCT");
@@ -102,7 +89,8 @@ public class HumanServiceTest {
         dnaSequences.add("AGAAGG");
         dnaSequences.add("CCCCTA");
         dnaSequences.add("TCACTG");
-        dna = humanService.concatDna(dnaSequences);
-        System.out.println(dna);
+        Assertions.assertEquals(expectedDna, humanService.concatDna(dnaSequences));
     }
+
+
 }

@@ -97,14 +97,14 @@ public class HumanService {
         if(countMutantSequence >= validations.NUMBER_SEQ_TO_BE_MUTANT){
             log.info("DNA is mutant, it has {} Mutant Sequences", countMutantSequence);
             //add the dna sequence in the DB
-            if(!humanRepository.addDna(dna, true)) {
+            if(!addDna(dna, true)) {
                 throw new HttpStatusException(HttpStatus.FORBIDDEN, "Failure in add dna process");
             }
             return true;
         }else{
             log.info("DNA is not mutant, it has {} Mutant Sequences", countMutantSequence);
             //add the dna sequence in the DB
-            if(!humanRepository.addDna(dna, false)) {
+            if(!addDna(dna, false)) {
                 throw new HttpStatusException(HttpStatus.FORBIDDEN, "Failure in add dna process");
             }
             return false;
@@ -118,5 +118,9 @@ public class HumanService {
             dna.append(sequence + '|');
         }
         return  dna.toString();
+    }
+
+    public boolean addDna(String dna, boolean isMutant){
+        return humanRepository.addDna(dna, isMutant);
     }
 }

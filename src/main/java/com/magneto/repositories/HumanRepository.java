@@ -1,5 +1,6 @@
 package com.magneto.repositories;
 
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
@@ -19,7 +20,8 @@ import java.util.Objects;
 @Singleton
 public class HumanRepository {
 
-    private AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().build();
+    private AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withRegion(Regions.US_EAST_1).build();
+
     private DynamoDB dynamoDB = new DynamoDB(client);
     private static final Logger log = LoggerFactory.getLogger(HumanRepository.class);
 
