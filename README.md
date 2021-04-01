@@ -17,6 +17,9 @@ Only people authorized by Magneto have the API-EndPoint to identify when a human
  ```
 - If you want to know the stats of the project you can consume the appropiate Endpoint through a ***GET*** method.
 
+
+
+
 ### Project developed with Micronaut Framework
 ---
 ### Micronaut 2.4.1 Documentation
